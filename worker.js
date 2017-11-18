@@ -1,13 +1,22 @@
-var express = require('express')
-var app = express()
+var schedule = require('node-schedule');
 
-app.set('port', (process.env.PORT || 5000))
-app.use(express.static(__dirname + '/public'))
+var APP = {
+  scheduleJob: function() {
+    // This rule is standard cron syntax for once per minute.
+    // See http://stackoverflow.com/a/5398044/1252653
+    rule = '* * * * *'
 
-app.get('/', function(request, response) {
-  response.send('Hello World!')
-})
+    // Kick off the job
+    var job = schedule.scheduleJob(rule, function() {
+      console.log('ping!')
+    });
+  },
 
-app.listen(app.get('port'), function() {
-  console.log("Node app is running at localhost:" + app.get('port'))
-})
+  init: function() {
+    APP.scheduleJob();
+  }
+};
+
+(function(){
+  APP.init();
+})();
